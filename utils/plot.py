@@ -5,9 +5,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils.constants import FIG_SIZE,FONT_SIZE
+from utils.constants import FIG_SIZE,FONT_SIZE,CMAP_RAINBOW
 
-__all__ =["histogram","scatter","pair"]
+__all__ = ["histogram","scatter","pair"]
 
 
 # RC Params for seaborn
@@ -26,10 +26,14 @@ def histogram(data, x, xtitle):
     ax.set_ylabel('Frequency')
     plt.show()
     
-def scatter(data ,x, y, xtitle, ytitle, hue):
+def scatter(data ,x, y, hue,xtitle="x", ytitle="y",):
+    if xtitle == "x":
+        xtitle = x
+    if ytitle == "y":
+        ytitle = y
     fig, ax = plt.subplots()
     #plt_style
-    sns.scatterplot(data = data, x = x, y = y, hue = hue, palette=constants.CMAP_RAINBOW, ax= ax)
+    sns.scatterplot(data = data, x = x, y = y, hue = hue, palette=CMAP_RAINBOW, ax= ax)
     #(lambda hue=hue: {'hue': hue, 'palette': 'rainbow'} if hue else {})(hue)
     ax.set_title(f"Plot of {xtitle} vs {ytitle}")
     ax.set_xlabel(xtitle)

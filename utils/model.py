@@ -10,7 +10,11 @@ def get_cleaned_data(path):
     #@TODO: CREATE ADDITIONAL COLUMNS 
     return data
 
-def split_data(data, label):
+def extract_train(data):
+    train, test = train_test_split(data, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
+    return train
+
+def split_train_test(data, label):
     """split your data into x_train, x_test, y_train, y_test
 
     Args:
@@ -23,7 +27,6 @@ def split_data(data, label):
     y = data.pop(label)
     x = data
     return train_test_split(x,y, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
-
 
 def finetune_model(model, params, xtrain, ytrain):
     """Performe hyperparameter tuning on your model

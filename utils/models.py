@@ -1,3 +1,4 @@
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -10,5 +11,16 @@ logistical_regression = Pipeline([
         ])
     ),
     ("logreg", LogisticRegression())
+    ]
+)
+
+random_forest = Pipeline([
+    (
+        "preprocess", 
+        ColumnTransformer([
+                        
+        ])
+    ),
+    ("logreg", RandomForestClassifier())
     ]
 )
