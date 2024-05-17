@@ -1,5 +1,6 @@
 ## Common Functions
 
-import constants
+from utils.constants import *
+
 def split_train_test(X, Y):
     pass
