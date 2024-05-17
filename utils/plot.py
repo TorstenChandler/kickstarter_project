@@ -5,18 +5,19 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from utils.constants import FIG_SIZE,FONT_SIZE
 
-import utils.constants as constants
+__all__ =["histogram","scatter","pair"]
 
 
 # RC Params for seaborn
-plt.rcParams['figure.figsize'] = constants.FIG_SIZE  # Set default figure size
+plt.rcParams['figure.figsize'] = FIG_SIZE  # Set default figure size
 plt.rcParams['font.family'] = 'serif'    # Set default font family
-plt.rcParams['font.size'] = constants.FONT_SIZE           # Set default font size
+plt.rcParams['font.size'] = FONT_SIZE          # Set default font size
 plt.rcParams['lines.linewidth'] = 2      # Set default line width
 #plt.rcParams['style'] == plt_style
 
-def plot_histograms(data, x, xtitle):
+def histogram(data, x, xtitle):
     fig, ax = plt.subplots()
     #plt_style
     sns.histplot(data = data, x=x, ax=ax)
@@ -25,7 +26,7 @@ def plot_histograms(data, x, xtitle):
     ax.set_ylabel('Frequency')
     plt.show()
     
-def make_scatterplot(data ,x, y, xtitle, ytitle, hue):
+def scatter(data ,x, y, xtitle, ytitle, hue):
     fig, ax = plt.subplots()
     #plt_style
     sns.scatterplot(data = data, x = x, y = y, hue = hue, palette=constants.CMAP_RAINBOW, ax= ax)
@@ -35,7 +36,7 @@ def make_scatterplot(data ,x, y, xtitle, ytitle, hue):
     ax.set_ylabel(ytitle)
     plt.show()
 
-def make_pairplot():
+def pair():
     pass 
 
 

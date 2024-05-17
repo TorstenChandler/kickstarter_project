@@ -1,5 +1,5 @@
 RSEED = 42
-FIG_SIZE = (10,0.7)
+FIG_SIZE = (50,50)
 FONT_SIZE = 12
 CMAP_BLUES = 'Blues'
 CMAP_RAINBOW= 'rainbow'
