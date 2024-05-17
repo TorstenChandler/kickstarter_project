@@ -1,10 +1,9 @@
 RSEED = 42
-figsize = (10,0.7)
-fontsize = 12
-cmap_blues = 'Blues'
-cmap_rainbow = 'rainbow'
-plt_style = 'seaborn-v0_8-darkgrid'
-
-test_size = 0.25
+FIG_SIZE = (10,0.7)
+FONT_SIZE = 12
+CMAP_BLUES = 'Blues'
+CMAP_RAINBOW= 'rainbow'
+PLT_STYLE = 'seaborn-v0_8-darkgrid'
+TEST_SIZE = 0.25
 
 
