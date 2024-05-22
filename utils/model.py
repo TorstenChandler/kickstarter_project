@@ -44,3 +44,9 @@ def finetune_model(model, params, xtrain, ytrain):
     model.fit(xtrain, ytrain)
     return model
 
+def get_valid_catoricals():
+    df = get_cleaned_data("data/kickstarter_projects.csv")
+    available_categories = df.category.to_list()
+    available_subcategories = df.subcategory.to_list()
+    available_countries = df.country.to_list()
+    return available_categories, available_subcategories, available_countries
