@@ -11,7 +11,13 @@ from sklearn.preprocessing import FunctionTransformer
     3) SCALING UNCLEAR
 """
 
-funded = FunctionTransformer(lambda row: True if row.pledged > row.goal else False)
+def successful(data):
+    data.funded = data.pledged > data.goal
+    data.pop("pledged")
+    data.pop("goal")
+    return data
+
+funded = FunctionTransformer(successful)
 
 
 logistical_regression = Pipeline([
