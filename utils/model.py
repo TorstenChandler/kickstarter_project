@@ -24,8 +24,8 @@ def split_train_test(data, label):
     Returns:
         
     """
-    y = data.pop(label)
-    x = data
+    y = data[label]
+    x = data.drop(label, axis=1)
     return train_test_split(x,y, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
 
 def finetune_model(model, params, xtrain, ytrain):
