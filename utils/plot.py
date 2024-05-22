@@ -6,7 +6,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as ticker
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report, recall_score, f1_score
 from utils.constants import FIG_SIZE,FONT_SIZE,CMAP_RAINBOW
+
 
 
 __all__ = ["histogram","scatter","pair"]
@@ -65,8 +67,60 @@ def pair():
     pass 
 
 
-def visualise_evaluation_metrics():
-    pass
+def visualise_evaluation_metrics(y_test, y_pred):
+    # Plot confusion matrix as heatmap
+    plt.figure(figsize=(6, 3))
+    sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues', cbar=False)
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    plt.title('Confusion Matrix')
+    plt.show()
+
+    print("--------"*10)
+    print("Accuracy Score : ", round(accuracy_score(y_test, y_pred),2), ", Recall Score : ", round(recall_score(y_test, y_pred),2), ", F1 Score : ", round(f1_score(y_test, y_pred),2))
+    print("--------"*10)
+
+    # Print classification report of baseline model
+    print("\n\n")
+    print("--------"*2, " Classification Report ", "--------"*5)
+    print(classification_report(y_test, y_pred))
+    
+
+def visualise_evaluation_metrics_multiple(models, y_test):
+    # Create a list to store results
+    result_data = []
+    for model in models:
+        model_accuracy_score = round(accuracy_score(y_test, model['y_pred']), 2)
+        model_recall_score = round(recall_score(y_test, model['y_pred']), 2)
+        model_f1_score = round(f1_score(y_test, model['y_pred']), 2)
+            
+        result_data.append({
+            "Name": model['name'], 
+            "Accuracy Score": model_accuracy_score, 
+            "Recall Score": model_recall_score, 
+            "F1 Score": model_f1_score
+        })
+
+
+    # Convert result_data list of dictionaries to DataFrame
+    result_df = pd.DataFrame(result_data)
+
+    # Print the DataFrame
+    print(result_df)
+    # Create subplots for confusion matrices
+    fig, axes = plt.subplots(1, len(models), figsize=(len(models) * 5, 3))
+
+    # Plot confusion matrix for each model
+    for i, model in enumerate(models):
+        cm = confusion_matrix(y_test, model['y_pred'])
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False, ax=axes[i])
+        axes[i].set_title(f"Confusion Matrix - {model['name']}")
+        axes[i].set_xlabel('Predicted Labels')
+        axes[i].set_ylabel('True Labels')
+
+    plt.tight_layout()
+    plt.show()
+    
 
 def bar_count_percent(data, x, y, xtitle=None, ytitle =None):
     if xtitle is None:
