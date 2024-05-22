@@ -24,8 +24,8 @@ def split_train_test(data, label):
     Returns:
         
     """
-    y = data.pop(label)
-    x = data
+    y = data[label]
+    x = data.drop(label, axis=1)
     return train_test_split(x,y, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
 
 def finetune_model(model, params, xtrain, ytrain):
@@ -44,3 +44,9 @@ def finetune_model(model, params, xtrain, ytrain):
     model.fit(xtrain, ytrain)
     return model
 
+def get_valid_catoricals():
+    df = get_cleaned_data("data/kickstarter_projects.csv")
+    available_categories = df.category.to_list()
+    available_subcategories = df.subcategory.to_list()
+    available_countries = df.country.to_list()
+    return available_categories, available_subcategories, available_countries
