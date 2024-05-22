@@ -4,11 +4,14 @@ import utils.constants as constants
 import pandas as pd
 __all__ = ["get_cleaned_data","split_datasplit_data","finetune_model"]
 
+def add_success(data:pd.DataFrame):
+    data.success = 1 if data.pledged >= data.goal else 0
+    return data
+
 def get_cleaned_data(path):
     data = pd.read_csv("./data/kickstarter_projects.csv")
     data.columns = data.columns.str.lower()
-    #@TODO: CREATE ADDITIONAL COLUMNS 
-    return data
+    return add_success(data)
 
 def extract_train(data):
     train, test = train_test_split(data, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
