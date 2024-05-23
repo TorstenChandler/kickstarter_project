@@ -8,8 +8,7 @@ import seaborn as sns
 import matplotlib.ticker as ticker
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report, recall_score, f1_score, precision_score
 from utils.constants import FIG_SIZE,FONT_SIZE,CMAP_RAINBOW, CMAP_BLUES
-
-
+from utils.model import split_train_test
 
 __all__ = ["histogram","scatter","pair"]
 
@@ -67,7 +66,7 @@ def pair():
     pass 
 
 
-def visualise_evaluation_metrics(y_test, y_pred):
+def visualise_evaluation_metric(y_test, y_pred):
     # Plot confusion matrix as heatmap
     plt.figure(figsize=(6, 3))
     sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap=CMAP_BLUES, cbar=False)
@@ -86,17 +85,52 @@ def visualise_evaluation_metrics(y_test, y_pred):
     print(classification_report(y_test, y_pred))
     
 
-def visualise_evaluation_metrics_multiple(models, y_test):
+
+def evaluation_metrics(models, xtest, ytest):
+    results = []
+    predictions = {}
+    for name,model in models:
+        pred = model.predict(xtest)
+        predictions[name] = pred
+        accuracy = round(accuracy_score(ytest, pred), 2)
+        precision =round(precision_score(ytest, pred),2)
+        recall = round(recall_score(ytest,pred), 2)
+        f1 =  round(f1_score(ytest,pred), 2)
+        results.append({
+            "Model": name,
+            "Accuracy Score": accuracy, 
+            "Precision Score" : precision,
+            "Recall Score": recall, 
+            "F1 Score": f1
+        })
+    result_df = pd.DataFrame(results)
+    print(result_df)
+
+    fig, axes = plt.subplots(1, len(models), figsize=(len(models) * 5, 3))
+    # Plot confusion matrix for each model
+    for i, model in enumerate(models):
+        name, model = model
+        cm = confusion_matrix(ytest, predictions[name])
+        sns.heatmap(cm, annot=True, fmt='d', cmap=CMAP_BLUES, cbar=False, ax=axes[i])
+        axes[i].set_title(f"Confusion Matrix - {name}")
+        axes[i].set_xlabel('Predicted Labels')
+        axes[i].set_ylabel('True Labels')
+
+    plt.tight_layout()
+    plt.show()
+
+def _visualise_evaluation_metrics_multiple(models, y_test):
+    
     # Create a list to store results
     result_data = []
-    for model in models:
+    for name, model in models:
         model_accuracy_score = round(accuracy_score(y_test, model['y_pred']), 2)
         model_precision_score = round(precision_score(y_test, model['y_pred']),2)
         model_recall_score = round(recall_score(y_test, model['y_pred']), 2)
         model_f1_score = round(f1_score(y_test, model['y_pred']), 2)
             
         result_data.append({
-            "Name": model['name'], 
+            "Name": name, 
             "Accuracy Score": model_accuracy_score, 
             "Precision Score" : model_precision_score,
             "Recall Score": model_recall_score, 
@@ -116,7 +150,7 @@ def visualise_evaluation_metrics_multiple(models, y_test):
     for i, model in enumerate(models):
         cm = confusion_matrix(y_test, model['y_pred'])
         sns.heatmap(cm, annot=True, fmt='d', cmap=CMAP_BLUES, cbar=False, ax=axes[i])
-        axes[i].set_title(f"Confusion Matrix - {model['name']}")
+        axes[i].set_title(f"Confusion Matrix - {name}")
         axes[i].set_xlabel('Predicted Labels')
         axes[i].set_ylabel('True Labels')
 
