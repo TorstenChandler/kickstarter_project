@@ -2,16 +2,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 import utils.constants as constants
 import pandas as pd
+import numpy as np
 __all__ = ["get_cleaned_data","split_datasplit_data","finetune_model"]
 
-def add_success(data:pd.DataFrame):
-    data.success = 1 if data.pledged >= data.goal else 0
+def clean_data(data:pd.DataFrame)->pd.DataFrame:
+    data.columns = data.columns.str.lower()
+    data['success'] =  data.apply(lambda row: 1 if row["pledged"] >= row["goal"] else 0, axis=1)
     return data
 
 def get_cleaned_data(path):
     data = pd.read_csv("./data/kickstarter_projects.csv")
-    data.columns = data.columns.str.lower()
-    return add_success(data)
+    data = data[data.State != 'Live']
+    return clean_data(data)
 
 def extract_train(data):
     train, test = train_test_split(data, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
@@ -30,6 +32,13 @@ def split_train_test(data, label):
     y = data[label]
     x = data.drop(label, axis=1)
     return train_test_split(x,y, test_size=constants.TEST_SIZE, random_state=constants.RSEED)
+
+def finetune_models(models, xtrain, ytrain):
+    best_fit = []
+    for model, paramas in models:
+        best_fit.append(finetune_model(model,paramas))
+    return best_fit
+    
 
 def finetune_model(model, params, xtrain, ytrain):
     """Performe hyperparameter tuning on your model
