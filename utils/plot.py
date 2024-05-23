@@ -140,7 +140,7 @@ def bar_count_percent(data, x, y, xtitle=None, ytitle =None):
     grouped = grouped.fillna(0)
 
     # Sort by total count in descending order
-    grouped = grouped.sort_values(by='Total', ascending=False)
+    grouped = grouped.sort_values(by='Success Rate', ascending=False)
 
     grouped_reset = grouped.reset_index()
 
