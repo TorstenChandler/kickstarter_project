@@ -46,7 +46,7 @@ knn = Pipeline([
 
 log_reg = Pipeline([
     ("pre_processing", create_preprocessor(RobustScaler())),
-    ("KNN", LogisticRegression(max_iter=1000, n_jobs=-1))
+    ("LogisticRegression", LogisticRegression(max_iter=1000, n_jobs=-1))
 
 ])
 
