@@ -2,33 +2,56 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import FunctionTransformer, StandardScaler, RobustScaler, MinMaxScaler, OneHotEncoder
+from sklearn.neighbors import KNeighborsClassifier
+import pandas as pd
 
-"""
-@TODO:
+def duration(data:pd.DataFrame):
+    data['launched'] = pd.to_datetime(data['launched'])
+    data['deadline'] = pd.to_datetime(data['deadline'])
+    data['duration'] = (data["deadline"] - data["launched"]).dt.days.astype(int)
+    return data[["duration"]]
 
-    1) CREATE NEW COLUMN FUNDED FROM (status) Live?
-    2) NEW COLUMNS DURATION, MONTH, YEAR FROM START AND END
-    3) SCALING UNCLEAR
-"""
+def split_date(data:pd.DataFrame):
+    data['launched'] = pd.to_datetime(data['launched'])
+    data['year'] = data["launched"].dt.year
+    data['month'] = data["launched"].dt.month
+    return data[['year','month']]
 
-logistical_regression = Pipeline([
-    (
-        "preprocess", 
-        ColumnTransformer([
-            
-        ])
-    ),
-    ("logreg", LogisticRegression())
-    ]
-)
+def passthrough(data):
+     return data
+
+def scale(scaler):
+        if scaler:
+            return scaler
+        else:
+            return FunctionTransformer(passthrough)
+        
+
+def create_preprocessor(scaler=None)->Pipeline:
+    return Pipeline([
+    ("ColumnTransformer", ColumnTransformer([
+            ("duration", FunctionTransformer(duration), ["launched","deadline"]),
+            ("split_date", FunctionTransformer(split_date), ["launched"]),
+            ("scale", scale(scaler), ["goal", "backers"]),
+            ("passthrough", OneHotEncoder(drop="first"), ['category','subcategory', 'country'])
+    ]))
+])
+
+knn = Pipeline([
+    ("pre_processing", create_preprocessor(RobustScaler())),
+    ("KNN", KNeighborsClassifier(n_jobs=-1, n_neighbors=3))
+
+])
+
+log_reg = Pipeline([
+    ("pre_processing", create_preprocessor(RobustScaler())),
+    ("KNN", LogisticRegression(max_iter=1000, n_jobs=-1))
+
+])
 
 random_forest = Pipeline([
-    (
-        "preprocess", 
-        ColumnTransformer([
-                        
-        ])
-    ),
-    ("logreg", RandomForestClassifier())
+    ("pre_processing", create_preprocessor()),
+    ("random_forest", RandomForestClassifier(n_jobs=-1, max_depth=5, max_leaf_nodes=20))
     ]
 )
