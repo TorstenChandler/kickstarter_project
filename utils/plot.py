@@ -66,7 +66,7 @@ def pair():
     pass 
 
 
-def visualise_evaluation_metric(y_test, y_pred):
+def evaluation_metric(y_test, y_pred):
     # Plot confusion matrix as heatmap
     plt.figure(figsize=(6, 3))
     sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap=CMAP_BLUES, cbar=False)

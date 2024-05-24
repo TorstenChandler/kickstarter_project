@@ -1,10 +1,11 @@
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier,VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, StandardScaler, RobustScaler, MinMaxScaler, OneHotEncoder
+from sklearn.preprocessing import FunctionTransformer, PolynomialFeatures,StandardScaler, RobustScaler, MinMaxScaler, OneHotEncoder
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
+import xgboost as xgb
 
 def duration(data:pd.DataFrame):
     data['launched'] = pd.to_datetime(data['launched'])
@@ -46,7 +47,7 @@ knn = Pipeline([
 
 log_reg = Pipeline([
     ("pre_processing", create_preprocessor(RobustScaler())),
-    ("KNN", LogisticRegression(max_iter=1000, n_jobs=-1))
+    ("log_reg", LogisticRegression(max_iter=1000, n_jobs=-1))
 
 ])
 
@@ -55,3 +56,15 @@ random_forest = Pipeline([
     ("random_forest", RandomForestClassifier(n_jobs=-1, max_depth=5, max_leaf_nodes=20))
     ]
 )
+
+xgboost =  Pipeline([
+     ("pre_processing", create_preprocessor()),
+     ("xgb", xgb.XGBClassifier(objective='binary:logistic', n_estimators=100, learning_rate=0.1))
+])
+
+
+ensemble = VotingClassifier([
+    ("log_reg", log_reg),
+    ("random_forest", random_forest),
+    ("xgboost",xgboost)
+], voting="soft")
