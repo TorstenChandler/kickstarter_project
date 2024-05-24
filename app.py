@@ -13,11 +13,10 @@ def predict(project)->tuple:
     return (failure,success)
 available_categories, available_subcategories, available_countries = get_valid_catoricals()
 
-def main():
-    st.title("Enter Kickstarter Project Details")
 
+st.title("Enter Kickstarter Project Details")
     
-
+with st.form(key='kickstarter'):
     # User input fields
     #user = st.selectbox("I am an :", ['Entrepreneur', 'Investor'], index=0)
     name = st.text_input("Enter Kickstarter Project Name:", value = "Most Comfortable Insoles on Earth")
@@ -41,23 +40,25 @@ def main():
 
     
     # Create a dictionary to store the input data
-    data = {
-        "Name": [name],
-        "Category": [category],
-        "Subcategory": [subcategory],
-        "Country": [country],
-        "Launched": [launch_date],
-        "Deadline": [deadline_date],
-        "Pledged": 0,
-        "Goal": [goal],
-        "Backers": backers
-    }
+    
 
     # Convert the dictionary to a pandas DataFrame
     
+    submit =st.form_submit_button("Predict Outcome")
 
     # Display the result
-    if st.button("Predict Outcome"):
+    if submit:
+        data = {
+            "Name": [name],
+            "Category": [category],
+            "Subcategory": [subcategory],
+            "Country": [country],
+            "Launched": [launch_date],
+            "Deadline": [deadline_date],
+            "Pledged": 0,
+            "Goal": [goal],
+            "Backers": backers
+        }
         failure, success = predict(data)
         if success >= 0.5:
             st.success(f"Project '{name}' has a {round(success*100)}% probability of Success!")
@@ -65,6 +66,4 @@ def main():
             st.error(f"Project '{name}' has a high probability of {round(failure*100)}% to fail. Consider revising the project or selecting another one.")
     #st.success(f"Name: {name}, Category: {category}, Sub-Category: {subcategory}, Country: {country}, Launch Date: {launch_date}, Deadline: {deadline_date}, Goal: {goal} ")
 
-if __name__ == "__main__":
-    main()
 
