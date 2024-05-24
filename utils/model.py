@@ -36,7 +36,7 @@ def split_train_test(data, label):
 def finetune_models(models, xtrain, ytrain):
     best_fit = []
     for model, paramas in models:
-        best_fit.append(finetune_model(model,paramas))
+        best_fit.append(finetune_model(model,paramas,xtrain,ytrain))
     return best_fit
     
 

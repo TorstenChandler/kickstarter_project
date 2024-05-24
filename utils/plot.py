@@ -119,43 +119,6 @@ def evaluation_metrics(models, xtest, ytest):
     plt.tight_layout()
     plt.show()
 
-def _visualise_evaluation_metrics_multiple(models, y_test):
-    
-    # Create a list to store results
-    result_data = []
-    for name, model in models:
-        model_accuracy_score = round(accuracy_score(y_test, model['y_pred']), 2)
-        model_precision_score = round(precision_score(y_test, model['y_pred']),2)
-        model_recall_score = round(recall_score(y_test, model['y_pred']), 2)
-        model_f1_score = round(f1_score(y_test, model['y_pred']), 2)
-            
-        result_data.append({
-            "Name": name, 
-            "Accuracy Score": model_accuracy_score, 
-            "Precision Score" : model_precision_score,
-            "Recall Score": model_recall_score, 
-            "F1 Score": model_f1_score
-        })
-
-
-    # Convert result_data list of dictionaries to DataFrame
-    result_df = pd.DataFrame(result_data)
-
-    # Print the DataFrame
-    print(result_df)
-    # Create subplots for confusion matrices
-    fig, axes = plt.subplots(1, len(models), figsize=(len(models) * 5, 3))
-
-    # Plot confusion matrix for each model
-    for i, model in enumerate(models):
-        cm = confusion_matrix(y_test, model['y_pred'])
-        sns.heatmap(cm, annot=True, fmt='d', cmap=CMAP_BLUES, cbar=False, ax=axes[i])
-        axes[i].set_title(f"Confusion Matrix - {name}")
-        axes[i].set_xlabel('Predicted Labels')
-        axes[i].set_ylabel('True Labels')
-
-    plt.tight_layout()
-    plt.show()
     
 
 def bar_count_percent(data, x, y, xtitle=None, ytitle =None):
@@ -174,7 +137,7 @@ def bar_count_percent(data, x, y, xtitle=None, ytitle =None):
     grouped = grouped.fillna(0)
 
     # Sort by total count in descending order
-    grouped = grouped.sort_values(by='Total', ascending=False)
+    grouped = grouped.sort_values(by='Success Rate', ascending=False)
 
     grouped_reset = grouped.reset_index()
 
