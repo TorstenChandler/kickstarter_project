@@ -9,8 +9,5 @@ jupyterlab-dash==0.1.0a3
 scikit-learn==1.2.2
 statsmodels==0.13.5
 pytest==7.3.1
-<<<<<<< HEAD
-xgboost
-=======
 streamlit
->>>>>>> 6b7668d0516ec90a837c3c6a9b8fff5f65f0a0dc
+xgboost
