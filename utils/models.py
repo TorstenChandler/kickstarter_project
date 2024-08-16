@@ -66,5 +66,5 @@ xgboost =  Pipeline([
 ensemble = VotingClassifier([
     ("log_reg", log_reg),
     ("random_forest", random_forest),
-    ("xgboost",xgboost)
+    ("knn", knn)
 ], voting="soft")

@@ -11,7 +11,7 @@ def clean_data(data:pd.DataFrame)->pd.DataFrame:
     return data
 
 def get_cleaned_data(path):
-    data = pd.read_csv("./data/kickstarter_projects.csv")
+    data = pd.read_csv(path)
     data = data[data.State != 'Live']
     return clean_data(data)
 
@@ -41,7 +41,7 @@ def finetune_models(models, xtrain, ytrain):
     
 
 def finetune_model(model, params, xtrain, ytrain):
-    """Performe hyperparameter tuning on your model
+    """Perform hyperparameter tuning on your model
 
     Args:
         model: _description_
@@ -52,13 +52,18 @@ def finetune_model(model, params, xtrain, ytrain):
     Returns:
         _type_: _description_
     """ 
-    model = GridSearchCV(model, params)
+    model = GridSearchCV(model, params) 
     model.fit(xtrain, ytrain)
     return model
 
-def get_valid_catoricals():
+
+def get_valid_categoricals():
     df = get_cleaned_data("data/kickstarter_projects.csv")
-    available_categories = df.category.to_list()
-    available_subcategories = df.subcategory.to_list()
-    available_countries = df.country.to_list()
+    
+    # Ensure the columns are referenced as strings
+    available_categories = df['category'].unique().tolist()
+    available_subcategories = df['subcategory'].unique().tolist()
+    available_countries = df['country'].unique().tolist()
+    
     return available_categories, available_subcategories, available_countries
+    

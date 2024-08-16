@@ -2,18 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np 
 import joblib
-from utils.model import get_valid_catoricals, clean_data
+from utils.model import get_valid_categoricals, clean_data
 import datetime
 model = joblib.load('./utils/pickles/xgboost.joblib')
 def predict(project)->tuple:
     data = clean_data(pd.DataFrame(project))
     results = model.predict_proba(data)
-    failure = results[0][0]
-    success = results[0][1]
+    failure = results[0][0] 
+    success = results[0][1] 
     return (failure,success)
-available_categories, available_subcategories, available_countries = get_valid_catoricals()
+available_categories, available_subcategories, available_countries = get_valid_categoricals()
 
-
+st.image('./kickstarter.png', use_column_width=True)
 st.title("Enter Kickstarter Project Details")
     
 with st.form(key='kickstarter'):
@@ -65,5 +65,3 @@ with st.form(key='kickstarter'):
         else:
             st.error(f"Project '{name}' has a high probability of {round(failure*100)}% to fail. Consider revising the project or selecting another one.")
     #st.success(f"Name: {name}, Category: {category}, Sub-Category: {subcategory}, Country: {country}, Launch Date: {launch_date}, Deadline: {deadline_date}, Goal: {goal} ")
-
-
